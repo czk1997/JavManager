@@ -1,4 +1,5 @@
 * JavManager
+A Program
 
 * Description
     A java program to manage the jav video on your disk.
