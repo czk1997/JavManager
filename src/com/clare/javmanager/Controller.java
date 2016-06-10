@@ -1,4 +1,4 @@
-package sample;
+package com.clare.javmanager;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

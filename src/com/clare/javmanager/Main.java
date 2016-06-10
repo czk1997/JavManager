@@ -1,4 +1,4 @@
-package sample;
+package com.clare.javmanager;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -10,7 +10,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("mainWindow.fxml"));
         primaryStage.setTitle("Jav Manager");
         primaryStage.setScene(new Scene(root, 1011, 811));
         primaryStage.show();

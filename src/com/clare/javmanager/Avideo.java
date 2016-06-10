@@ -1,4 +1,4 @@
-package sample;
+package com.clare.javmanager;
 
 import java.util.ArrayList;
 
