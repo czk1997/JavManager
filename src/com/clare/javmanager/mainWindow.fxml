@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.*?>
+<?import javafx.collections.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.control.Button?>
@@ -11,7 +12,7 @@
 
 <GridPane alignment="CENTER" hgap="10.0" prefHeight="811.9999000000025" prefWidth="1011.0000999999975" vgap="10.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.clare.javmanager.Controller">
   <children>
-    <Pane prefHeight="811.0" prefWidth="1011" GridPane.columnIndex="0" GridPane.rowIndex="0">
+    <Pane prefHeight="811.0" prefWidth="1011.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
       <children>
         <MenuBar layoutX="0.0" layoutY="1.0" prefHeight="26.0" prefWidth="1011.0">
           <menus>
@@ -32,7 +33,7 @@
             </Menu>
           </menus>
         </MenuBar>
-        <TableView fx:id="infoTable" layoutX="0.0" layoutY="274.0" prefHeight="537.0" prefWidth="1011.0">
+        <TableView fx:id="infoTable" layoutX="0.0" layoutY="348.0" prefHeight="463.0" prefWidth="1011.0">
           <columns>
             <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="95.0" text="Number" fx:id="numberT" />
             <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="152.0" text="Comapny" fx:id="companyT" />
@@ -42,8 +43,8 @@
           </columns>
         </TableView>
         <ImageView id="cover" fx:id="coverP" fitHeight="230.0" fitWidth="306.66666666666663" layoutX="15.0" layoutY="35.0" pickOnBounds="true" preserveRatio="true" />
-        <Label layoutX="356.0" layoutY="69.0" text="Number" />
-        <TextField fx:id="numberField" layoutX="414.0" layoutY="66.0" prefWidth="98.50006103515625" />
+        <Label layoutX="354.0" layoutY="75.0" text="Number" />
+        <TextField fx:id="numberField" layoutX="412.0" layoutY="72.0" prefWidth="98.50006103515625" />
         <Label layoutX="361.0" layoutY="105.0" text="Name" />
         <TextField fx:id="NameField" layoutX="414.0" layoutY="102.0" prefWidth="339.0" />
         <Label layoutX="539.0" layoutY="72.0" text="Comapny" />
@@ -55,6 +56,21 @@
         <TextField fx:id="pathField" layoutX="414.0" layoutY="224.0" onAction="#clickPathField" onMouseClicked="#clickPathField" prefWidth="410.0" />
         <Label layoutX="354.0" layoutY="227.0" text="Path" />
         <Button fx:id="scanB" layoutX="855.0" layoutY="225.0" mnemonicParsing="false" onAction="#clickScanButton" text="Scan" />
+        <ChoiceBox fx:id="mosicStatus" layoutX="788.0" layoutY="71.0">
+          <items>
+            <FXCollections fx:factory="observableArrayList">
+              <String fx:value="Item 1" />
+              <String fx:value="Item 2" />
+              <String fx:value="Item 3" />
+            </FXCollections>
+          </items>
+        </ChoiceBox>
+        <Button fx:id="addButton" layoutX="927.0" layoutY="225.0" mnemonicParsing="false" onAction="#addToDatabase" text="Add" />
+        <Label layoutX="353.0" layoutY="41.0" text="DBID" />
+        <TextField id="numberField" layoutX="411.0" layoutY="38.0" prefWidth="98.50006103515625" />
+        <TextField id="pathField" fx:id="folderPath" layoutX="428.0" layoutY="265.0" onAction="#clickFolderPathField" onMouseClicked="#clickFolderPathField" prefWidth="410.0" />
+        <Label layoutX="356.0" layoutY="268.0" text="Folder Path" />
+        <Button fx:id="scanFolder" layoutX="855.0" layoutY="266.0" mnemonicParsing="false" onAction="#listFilesForFolder" text="Scan folder" />
       </children>
     </Pane>
   </children>

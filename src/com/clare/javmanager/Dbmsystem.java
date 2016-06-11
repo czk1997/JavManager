@@ -1,5 +1,6 @@
 package com.clare.javmanager;
 import java.sql.*;
+import java.util.ArrayList;
 
 /**
  * Created by chenz on 6/9/2016.
@@ -15,44 +16,50 @@ public class Dbmsystem {
     public Dbmsystem(){
         initilizeTable();
     }
-    public int updateString(int options, String content,int id){
+    public  int updateString(int options, String content,int id){
         String sql="UPDATE Movies SET "+keywords[options]+" WHERE UID="+id;
         ResultSet result=constumupdate(sql);
         return 0;
     }
-    public int insertNewMovie(String name,String Company, String filepath, String releasedate, boolean mosic,String actors, String numbers,String imagePath){
-        String sql="INSERT INTO Movies(movieName,Numbers,Actors,Company,ReleaseDate,Path,mosic,imagePath) VALUES (\""+name+"\", \""+numbers+"\", \""+actors+"\", "+Company+"\", \""+releasedate+"\", \""+filepath+"\", "+mosic+", \""+imagePath+"\");";
+    public  int insertNewMovie(String name,String Company, String filepath, String releasedate, int mosic,String actors, String numbers,String imagePath){
+        System.out.println("True");
+        String sql="INSERT INTO Movies(movieName,Numbers,Actors,Company,ReleaseDate,Path,mosic,imagePath) VALUES (\"" + name + "\", \""+numbers+"\", \""+actors+"\", \""+Company+"\", \""+releasedate+"\", \""+filepath+"\", "+mosic+", \""+imagePath+"\");";
+        System.out.println(sql);
         ResultSet result=constumupdate(sql);
         return 0;
+
     }
-    public ResultSet constumupdate(String content){
+    public  ResultSet constumupdate(String content){
         Connection c=null;
         Statement stmt=null;
         ResultSet result=null;
         try {
             Class.forName("org.sqlite.JDBC");
-            c=DriverManager.getConnection("jdbc:sqllite:userDate.db");
+            c = DriverManager.getConnection("jdbc:sqlite:userData.db");
             System.out.println("Got connection of Database");
+            stmt=c.createStatement();
             stmt.execute(content);
+            System.out.println("yes!!!!");
             result=stmt.getResultSet();
             stmt.close();
             c.close();
 
         }catch (ClassNotFoundException e){
+            e.printStackTrace();
 
         }catch (SQLException e){
+            e.printStackTrace();
         }
         return result;
 
     }
-    public int initilizeTable(){
+    public  int initilizeTable(){
         Connection c = null;
         Statement stmt = null;
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection("jdbc:sqlite:userData.db");
             System.out.println("Opened database successfully");
-
             stmt = c.createStatement();
             String sql = "CREATE TABLE Movies\n" +
                     "(\n" +
@@ -81,15 +88,35 @@ public class Dbmsystem {
             c.close();
         } catch ( Exception e ) {
             System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-            System.exit(0);
+
         }
         System.out.println("Table created successfully");
         return 0;
     }
-    public ResultSet getMovieInfo(int type, String content){
+    public  ResultSet getMovieInfo(int type, String content){
         String sql="SELECT * FROM Movies WHERE "+keywords[type]+"="+content+";";
         ResultSet resultSet=constumupdate(sql);
         return resultSet;
+    }
+    public  ArrayList<ArrayList<String>> getReplaceInfo(){
+        String sql="SELECT * FROM RepkeyWord";
+        ResultSet resultSet=constumupdate(sql);
+        ArrayList<ArrayList<String>> keys=new ArrayList<>();
+        ArrayList<String> temp=new ArrayList<>();
+        try{
+            while (resultSet.next()){
+                temp.clear();
+                temp.add(resultSet.getString("orginalName"));
+                temp.add(resultSet.getString("numberKey"));
+                keys.add(temp);
+            }
+
+        }catch (SQLException e){
+
+            e.printStackTrace();
+        }
+        return keys;
+
     }
     public static void main(String args[]){
         Dbmsystem d=new Dbmsystem();

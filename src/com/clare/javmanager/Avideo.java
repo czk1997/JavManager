@@ -1,6 +1,10 @@
 package com.clare.javmanager;
 
+import javafx.scene.image.Image;
+
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public abstract class Avideo {
     public String videoName;
@@ -46,4 +50,5 @@ public abstract class Avideo {
     public ArrayList<String> getActors(){
         return actors;
     }
+
 }
