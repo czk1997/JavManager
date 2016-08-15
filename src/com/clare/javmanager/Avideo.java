@@ -11,7 +11,16 @@ public class Avideo {
     public StringBuilder actors;
     public String videoCode = new String();
     public Date releaseDate = new Date();
+    public String rdataString = new String();
     public Avideo(){
+    }
+
+    public Avideo(String videoCode, String videoName, String company, String actors, String rdataString) {
+        this.videoCode = videoCode;
+        this.videoName = videoName;
+        this.company = company;
+        this.actors = new StringBuilder(actors);
+        this.rdataString = rdataString;
 
 
     }
@@ -30,11 +39,14 @@ public class Avideo {
 
     public void setReleaseDate(Date ReleaseDate) {
         this.releaseDate = ReleaseDate;
+        DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+        rdataString = format1.format(releaseDate);
+
     }
 
     public String getStringDate() {
-        DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
-        return format1.format(releaseDate);
+
+        return rdataString;
     }
 
     public String getVideoName(){

@@ -1,9 +1,11 @@
 package com.clare.javmanager;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.DirectoryChooser;
@@ -15,6 +17,8 @@ import org.jsoup.Jsoup;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,17 +40,17 @@ public class Controller implements Initializable {
     @FXML
     public TextField pathField;
     @FXML
-    public TableView infoTable;
+    public TableView<Avideo> infoTable;
     @FXML
-    public TableColumn numberT;
+    public TableColumn<Avideo, String> numberT;
     @FXML
-    public TableColumn companyT;
+    public TableColumn<Avideo, String> companyT;
     @FXML
-    public TableColumn NameT;
+    public TableColumn<Avideo, String> NameT;
     @FXML
-    public TableColumn rDateT;
+    public TableColumn<Avideo, String> rDateT;
     @FXML
-    public TableColumn ActorT;
+    public TableColumn<Avideo, String> ActorT;
     @FXML
     public ImageView coverP;
     @FXML
@@ -65,11 +69,20 @@ public class Controller implements Initializable {
     public StringBuilder Actors;
     public String code, path;
     public ArrayList<Avideo> avList = new ArrayList<>();
+    public ObservableList<Avideo> dataOfTable = FXCollections.observableArrayList();
+
 
     public void initialize(URL url, ResourceBundle rb) {
         dbms = new Dbmsystem();
         mosicStatus.setItems(FXCollections.observableArrayList(
                 "uncensored", "censored"));
+        numberT.setCellValueFactory(new PropertyValueFactory<Avideo, String>("videoCode"));
+        companyT.setCellValueFactory(new PropertyValueFactory<Avideo, String>("company"));
+        NameT.setCellValueFactory(new PropertyValueFactory<Avideo, String>("videoName"));
+        rDateT.setCellValueFactory(new PropertyValueFactory<Avideo, String>("rdataString"));
+        ActorT.setCellValueFactory(new PropertyValueFactory<Avideo, String>("actors"));
+        infoTable.setItems(dataOfTable);
+        updateTable();
 
 
     }
@@ -257,6 +270,7 @@ public class Controller implements Initializable {
     public void addToDatabase(Avideo avideo) {
         boolean flag = (mosicStatus.getSelectionModel().isSelected(0) == true);
         int a = dbms.insertNewMovie(avideo.getVideoName(), avideo.getCompany(), avideo.getFilepath(), avideo.getStringDate(), avideo.getIntStatus(), avideo.getActors(), code, imagePath);
+
     }
 
     public void addToDatabase() {
@@ -276,7 +290,9 @@ public class Controller implements Initializable {
                 tempavdeio.setFilepath(path);
                 addToDatabase(tempavdeio);
             }
+
         }
+        updateTable();
     }
 
     public void clickFolderPathField(){
@@ -284,6 +300,29 @@ public class Controller implements Initializable {
         File dir = chooser.showDialog(null);
         folderPath.setText(dir.getAbsolutePath());
 
+    }
+
+    public void updateTable() {
+        System.out.println("cleared");
+        dataOfTable.clear();
+        ResultSet resultSet = null;
+        resultSet = dbms.getAllMovies();
+        if (resultSet != null) {
+            System.out.println("Its not null");
+        }
+        try {
+            while (resultSet.next()) {
+
+                System.out.println("Nice!");
+                resultSet.getString(1);
+                dataOfTable.add(new Avideo(resultSet.getString("Numbers"), resultSet.getString("movieName"), resultSet.getString("Company"), resultSet.getString("Actors"), resultSet.getString("ReleaseDate")));
+
+            }
+
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+        }
     }
 }
 

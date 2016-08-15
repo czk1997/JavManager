@@ -19,6 +19,7 @@ public class Dbmsystem {
     public  int updateString(int options, String content,int id){
         String sql="UPDATE Movies SET "+keywords[options]+" WHERE UID="+id;
         ResultSet result=constumupdate(sql);
+
         return 0;
     }
     public  int insertNewMovie(String name,String Company, String filepath, String releasedate, int mosic,String actors, String numbers,String imagePath){
@@ -48,6 +49,32 @@ public class Dbmsystem {
             e.printStackTrace();
 
         }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return result;
+
+    }
+
+    public ResultSet constumQuery(String content) {
+        Connection c = null;
+        Statement stmt = null;
+        ResultSet result = null;
+        try {
+            Class.forName("org.sqlite.JDBC");
+            c = DriverManager.getConnection("jdbc:sqlite:userData.db");
+            System.out.println("Got connection of Database");
+            stmt = c.createStatement();
+            System.out.println(content);
+            result = stmt.executeQuery(content);
+            System.out.println("yes!!!!");
+
+
+            System.out.println("Closed!");
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return result;
@@ -100,11 +127,12 @@ public class Dbmsystem {
     }
     public  ArrayList<ArrayList<String>> getReplaceInfo(){
         String sql="SELECT * FROM RepkeyWord";
-        ResultSet resultSet=constumupdate(sql);
+        ResultSet resultSet = constumQuery(sql);
         ArrayList<ArrayList<String>> keys=new ArrayList<>();
         ArrayList<String> temp=new ArrayList<>();
         try{
             while (resultSet.next()){
+
                 temp.clear();
                 temp.add(resultSet.getString("orginalName"));
                 temp.add(resultSet.getString("numberKey"));
@@ -118,7 +146,30 @@ public class Dbmsystem {
         return keys;
 
     }
-    public static void main(String args[]){
+
+    public ResultSet getAllMovies() {
+        String sql = "SELECT * FROM Movies";
+        ResultSet resultSet = constumQuery(sql);
+        try {
+            System.out.println(resultSet.getRow());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return resultSet;
+    }
+
+    public ResultSet getAllMovies() {
+        String sql = "SELECT * FROM Movies";
+        ResultSet resultSet = constumQuery(sql);
+        try {
+            System.out.println(resultSet.getRow());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return resultSet;
+    }
+
+    public static void main(String args[]) {
         Dbmsystem d=new Dbmsystem();
     }
 }
