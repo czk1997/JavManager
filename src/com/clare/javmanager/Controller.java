@@ -1,30 +1,23 @@
 package com.clare.javmanager;
 
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.shape.Path;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import org.jsoup.Connection;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
-import org.sqlite.core.DB;
 
-
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URL;
-import java.net.URLConnection;
-import java.util.Observable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -70,6 +63,8 @@ public class Controller implements Initializable {
     public TextField folderPath;
     public String Name,Company,ReleaseDate,Path,Number;
     public StringBuilder Actors;
+    public String code, path;
+    public ArrayList<Avideo> avList = new ArrayList<>();
 
     public void initialize(URL url, ResourceBundle rb) {
         dbms = new Dbmsystem();
@@ -86,8 +81,8 @@ public class Controller implements Initializable {
         getNumberOfFile(file);
     }
 
-    public void clickScanButton() {
-        String url = "https://www.javbus.com/" + numberField.getText();
+    public Avideo clickScanButton() {
+        String url = "https://www.javbus.com/" + code;
         System.out.println(url);
         String result = "";
         boolean flag = false;
@@ -99,12 +94,12 @@ public class Controller implements Initializable {
         } catch (HttpStatusException e2) {
 
             try {
-                url = "https://www.javbus.com/" + numberField.getText().replaceAll("-", "_");
+                url = "https://www.javbus.com/" + code.replaceAll("-", "_");
                 System.out.println(url);
                 Connection.Response response = Jsoup.connect(url).execute();
                 System.out.println(response.statusCode() + " : " + response.url());
                 result = response.body();
-                numberField.setText(numberField.getText().replaceAll("-", "_"));
+                code = code.replaceAll("-", "_");
             } catch (IOException e3) {
                 e3.printStackTrace();
             }
@@ -114,18 +109,20 @@ public class Controller implements Initializable {
             e.printStackTrace();
         }
 
-        newMovie(result);
+        Avideo avideo = newMovie(result);
+        return avideo;
     }
 
     public String getNumberOfFile(File file) {
-        String fileNameWithoutExt = file.getName().toLowerCase().substring(0, file.getName().lastIndexOf(".")).replaceAll("_", "-").replace("-hd-", "-").replace("-fhd-", "").replace("-1080p-", "-").replace("-full-", "-").replaceAll("s model", "SMBD-");
+        String fileNameWithoutExt = file.getName().toLowerCase().substring(0, file.getName().lastIndexOf(".")).replaceAll("_", "-").replace("-hd-", "-").replace("-fhd-", "").replace("-1080p-", "-").replace("-full-", "-").replaceAll("s model", "SMBD-").replace("1080p", "").replace("fhd", "");
         Pattern p2 = Pattern.compile("(\\d+-\\d+)|(\\[a-z]+-\\d+)|([a-z]+-\\d+)|(\\[a-z]+\\d+)|(xxx-av-\\d+)");
         Matcher m2 = p2.matcher(fileNameWithoutExt);
         Pattern p3 = Pattern.compile("(n\\d+)|(k\\d+)");
         Matcher m3 = p3.matcher(fileNameWithoutExt);
         if (m2.find()) {
             fileNameWithoutExt = m2.group(0);
-            numberField.setText(m2.group(0));
+
+            code = m2.group(0);
             if (fileNameWithoutExt.matches("\\[a-z]+\\d+")) {
                 Pattern p = Pattern.compile("\\[a-z]+");
                 Matcher m = p.matcher(fileNameWithoutExt);
@@ -138,19 +135,22 @@ public class Controller implements Initializable {
                     String numbers = m.group(0);
                     fileNameWithoutExt = words + "-" + numbers;
                 }
-                numberField.setText(fileNameWithoutExt);
+
+                code = fileNameWithoutExt;
             }
 
         } else if (m3.find()) {
             fileNameWithoutExt = m3.group(0);
-            numberField.setText(m3.group(0));
+            code = m3.group(0);
+
         }
 
 
         return fileNameWithoutExt;
     }
 
-    public void newMovie(String resultOfSpider) {
+    public Avideo newMovie(String resultOfSpider) {
+        Avideo avideo = new Avideo();
         Name=new String();
         Company=new String();
         Actors=new StringBuilder();
@@ -167,7 +167,7 @@ public class Controller implements Initializable {
             String temp2 = "<p><span class=\"header\">識別碼:</span> <span style=\"color:#CC0000;\">";
             temp = temp.replace(temp2, "").replace("</span></p>", "");
             System.out.println(temp);
-            numberField.setText(temp.toUpperCase());
+            avideo.setVideoCode(temp);
             Number=temp;
             temp = new String();
             matcher.reset();
@@ -180,7 +180,7 @@ public class Controller implements Initializable {
             String temp2 = "<p><span class=\"header\">製作商:</span> <a href=\"(.+?)\">";
             temp = temp.replaceAll(temp2, "").replace("</a></p>", "");
             System.out.println(temp);
-            compamyField.setText(temp);
+            avideo.setCompany(temp);
             Company=temp;
             temp = new String();
             matcher.reset();
@@ -192,7 +192,7 @@ public class Controller implements Initializable {
             String temp2 = "<a class=\"bigImage\" href=\"(.+?)\"><img src=\"(.+?)\" title=\"";
             temp = temp.replaceAll(temp2, "").replace("\">", "").replaceAll("\\s", " ");
             System.out.println(temp);
-            NameField.setText(temp);
+            avideo.setVideoName(temp);
             Name=temp;
             temp = new String();
             matcher.reset();
@@ -205,7 +205,12 @@ public class Controller implements Initializable {
             String temp2 = "<meta name=\"description\" content=\"【發行日期】";
             temp = temp.replaceAll(temp2, "").replaceAll("，【長度】((.+?)|(.+?)\n(.+?))>", "");
             System.out.println(temp);
-            rDateField.setText(temp);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                avideo.setReleaseDate(sdf.parse(temp));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             ReleaseDate=temp;
             temp = new String();
             matcher.reset();
@@ -218,6 +223,7 @@ public class Controller implements Initializable {
             String temp2 = "<a class=\"bigImage\" href=\"(.+?)\"><img src=\"";
             temp = temp.replaceAll(temp2, "").replaceAll("\" title(.+?|.+?\\n.+?)\">", "").replaceAll("\\s", " ");
             System.out.println(temp);
+            avideo.setImagePath(temp);
             imagePath = temp;
             Image image = new Image(temp);
             coverP.setImage(image);
@@ -233,35 +239,42 @@ public class Controller implements Initializable {
             String temp2 = "<div class=\"star-name\"><a href=\"(.+?)\" title=\"(.+?)\">";
             temp = temp.replaceAll(temp2, "").replaceAll("</a></div>", "").replaceAll("\\s", " ");
             System.out.println(temp);
-            actorField.appendText(temp + ", ");
+
             Actors.append(temp+" , ");
             temp = new String();
         }
-
+        avideo.setActors(Actors);
         matcher.reset();
         if (resultOfSpider.contains("<li class=\"active\"><a href=\"https://www.javbus.com/\">有碼</a></li>")) {
-            mosicStatus.getSelectionModel().select(1);
+            avideo.setMosicStatus(true);
         } else if (resultOfSpider.contains("<li class=\"active\"><a href=\"https://www.javbus.com/uncensored\">無碼</a></li>")) {
-            mosicStatus.getSelectionModel().select(0);
+            avideo.setMosicStatus(false);
 
         }
+        return avideo;
+    }
 
+    public void addToDatabase(Avideo avideo) {
+        boolean flag = (mosicStatus.getSelectionModel().isSelected(0) == true);
+        int a = dbms.insertNewMovie(avideo.getVideoName(), avideo.getCompany(), avideo.getFilepath(), avideo.getStringDate(), avideo.getIntStatus(), avideo.getActors(), code, imagePath);
     }
 
     public void addToDatabase() {
         boolean flag = (mosicStatus.getSelectionModel().isSelected(0) == true);
-
         int a = dbms.insertNewMovie(NameField.getText(), compamyField.getText(), pathField.getText(), rDateField.getText(), mosicStatus.getSelectionModel().getSelectedIndex(), actorField.getText(), numberField.getText(), imagePath);
     }
     public void listFilesForFolder(){
         File folder=new File(folderPath.getText());
         File[] listOfFiles = folder.listFiles();
+        ArrayList<Avideo> avList2 = new ArrayList<>();
         for (int i = 0; i < listOfFiles.length; i++) {
             if (listOfFiles[i].isFile()) {
                 pathField.setText(listOfFiles[i].getName());
                 getNumberOfFile(listOfFiles[i]);
-                clickScanButton();
-                addToDatabase();
+                Avideo tempavdeio = clickScanButton();
+                path = folderPath.getText() + "\\" + listOfFiles[i].getName();
+                tempavdeio.setFilepath(path);
+                addToDatabase(tempavdeio);
             }
         }
     }
