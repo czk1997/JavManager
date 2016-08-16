@@ -12,17 +12,26 @@ public class Avideo {
     public String videoCode = new String();
     public Date releaseDate = new Date();
     public String rdataString = new String();
+    public int dbid;
     public Avideo(){
     }
 
-    public Avideo(String videoCode, String videoName, String company, String actors, String rdataString) {
+    public Avideo(int dbid, String videoCode, String videoName, String company, String actors, String rdataString) {
+        this.dbid = dbid;
         this.videoCode = videoCode;
         this.videoName = videoName;
         this.company = company;
         this.actors = new StringBuilder(actors);
         this.rdataString = rdataString;
 
+    }
 
+    public int getDbid() {
+        return dbid;
+    }
+
+    public void setDbid(int dbid) {
+        this.dbid = dbid;
     }
 
     public String getVideoCode() {
@@ -46,6 +55,10 @@ public class Avideo {
 
     public String getStringDate() {
 
+        return rdataString;
+    }
+
+    public String getRdataString() {
         return rdataString;
     }
 
@@ -103,4 +116,5 @@ public class Avideo {
             return 0;
         }
     }
+
 }

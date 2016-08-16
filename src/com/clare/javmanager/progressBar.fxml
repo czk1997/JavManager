@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.layout.*?>
+<GridPane xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER" hgap="10.0" prefHeight="200.0" prefWidth="800.0"
+          vgap="10.0" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.clare.javmanager.Progress">
+    <children>
+        <Pane prefHeight="193.0" prefWidth="877.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <children>
+                <ProgressBar fx:id="progress" layoutX="36.0" layoutY="109.0" prefHeight="30.0" prefWidth="729.0"
+                             progress="0.0"/>
+                <Label fx:id="infoLabel" layoutX="226.0" layoutY="65.0" prefHeight="16.9609375" prefWidth="397.0"
+                       text="Label"/>
+            </children>
+        </Pane>
+    </children>
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
+    </rowConstraints>
+</GridPane>

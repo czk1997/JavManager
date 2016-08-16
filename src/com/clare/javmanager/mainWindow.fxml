@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.collections.*?>
-<?import javafx.geometry.Insets?>
+<?import javafx.collections.FXCollections?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.image.*?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.layout.GridPane?>
-
-<GridPane alignment="CENTER" hgap="10.0" prefHeight="811.9999000000025" prefWidth="1011.0000999999975" vgap="10.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="com.clare.javmanager.Controller">
+<?import java.lang.String?>
+<GridPane xmlns:fx="http://javafx.com/fxml/1" fx:id="AllContent" alignment="CENTER" disable="false"
+          gridLinesVisible="false" hgap="10.0" prefHeight="900.0" prefWidth="1600.0" vgap="10.0"
+          xmlns="http://javafx.com/javafx/2.2" fx:controller="com.clare.javmanager.Controller">
   <children>
-    <Pane prefHeight="811.0" prefWidth="1011.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+    <Pane fx:id="content" disable="false" prefHeight="811.0" prefWidth="1011.0" styleClass="background"
+          GridPane.columnIndex="0" GridPane.rowIndex="0">
       <children>
-        <MenuBar layoutX="0.0" layoutY="1.0" prefHeight="26.0" prefWidth="1011.0">
+        <MenuBar layoutX="0.0" layoutY="1.0" prefHeight="26.0" prefWidth="1600.0">
           <menus>
             <Menu mnemonicParsing="false" text="File">
               <items>
@@ -33,8 +31,10 @@
             </Menu>
           </menus>
         </MenuBar>
-        <TableView fx:id="infoTable" layoutX="0.0" layoutY="348.0" prefHeight="463.0" prefWidth="1011.0">
+        <TableView fx:id="infoTable" layoutX="0.0" layoutY="368.0" onMouseClicked="#onTableClicked" prefHeight="532.0"
+                   prefWidth="1600.0">
           <columns>
+            <TableColumn prefWidth="75.0" text="DBID" fx:id="dbidT"/>
             <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="95.0" text="Number" fx:id="numberT" />
             <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="152.0" text="Comapny" fx:id="companyT" />
             <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="475.0" text="Name" fx:id="NameT" />
@@ -42,21 +42,25 @@
             <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="177.0" text="Actor" fx:id="ActorT" />
           </columns>
         </TableView>
-        <ImageView id="cover" fx:id="coverP" fitHeight="230.0" fitWidth="306.66666666666663" layoutX="15.0" layoutY="35.0" pickOnBounds="true" preserveRatio="true" />
-        <Label layoutX="354.0" layoutY="75.0" text="Number" />
-        <TextField fx:id="numberField" layoutX="412.0" layoutY="72.0" prefWidth="98.50006103515625" />
-        <Label layoutX="361.0" layoutY="105.0" text="Name" />
-        <TextField fx:id="NameField" layoutX="414.0" layoutY="102.0" prefWidth="339.0" />
-        <Label layoutX="539.0" layoutY="72.0" text="Comapny" />
-        <TextField fx:id="compamyField" layoutX="597.0" layoutY="69.0" prefWidth="155.0" />
-        <Label layoutX="361.0" layoutY="144.0" text="Actor" />
-        <TextField id="ActorT" fx:id="actorField" layoutX="413.0" layoutY="141.0" prefWidth="339.0" />
-        <TextField fx:id="rDateField" layoutX="414.0" layoutY="180.0" prefWidth="183.0" />
-        <Label layoutX="345.0" layoutY="186.0" text="Rlease Date" />
-        <TextField fx:id="pathField" layoutX="414.0" layoutY="224.0" onAction="#clickPathField" onMouseClicked="#clickPathField" prefWidth="410.0" />
-        <Label layoutX="354.0" layoutY="227.0" text="Path" />
-        <Button fx:id="scanB" layoutX="855.0" layoutY="225.0" mnemonicParsing="false" onAction="#clickScanButton" text="Scan" />
-        <ChoiceBox fx:id="mosicStatus" layoutX="788.0" layoutY="71.0">
+        <ImageView id="cover" fx:id="coverP" fitHeight="230.0" fitWidth="306.66666666666663" layoutX="15.0"
+                   layoutY="57.0" pickOnBounds="true" preserveRatio="true"/>
+        <Label layoutX="354.0" layoutY="78.0" text="Number"/>
+        <TextField fx:id="numberField" layoutX="411.0" layoutY="72.0" prefWidth="98.50006103515625"/>
+        <Label layoutX="363.0" layoutY="105.0" text="Name"/>
+        <TextField fx:id="NameField" layoutX="411.0" layoutY="110.0" prefWidth="339.0"/>
+        <Label layoutX="530.0" layoutY="75.0" text="Comapny"/>
+        <TextField fx:id="compamyField" layoutX="594.0" layoutY="69.0" prefWidth="155.0"/>
+        <Label layoutX="362.0" layoutY="142.0" text="Actor"/>
+        <TextField id="ActorT" fx:id="actorField" layoutX="411.0" layoutY="142.0" prefWidth="339.0"/>
+        <TextField fx:id="rDateField" layoutX="411.0" layoutY="173.0" prefWidth="183.0"/>
+        <Label layoutX="345.0" layoutY="176.0" text="Rlease Date"/>
+        <TextField fx:id="pathField" layoutX="411.0" layoutY="203.0" onAction="#clickPathField"
+                   onMouseClicked="#clickPathField" prefWidth="410.0"/>
+        <Label layoutX="351.0" layoutY="202.0" text="Path"/>
+        <Button fx:id="scanB" layoutX="835.0" layoutY="34.0" mnemonicParsing="false" onAction="#clickScanButton"
+                style=" border: none;&#10;  font-size: 15px;&#10;  font-weight: normal;&#10;  line-height: 1.4;&#10;  border-radius: 4px;&#10;  padding: 10px 15px;&#10;  -webkit-font-smoothing: subpixel-antialiased;&#10;  -webkit-transition: border 0.25s linear, color 0.25s linear, background-color 0.25s linear;&#10;          transition: border 0.25s linear, color 0.25s linear, background-color 0.25s linear;"
+                text="Scan"/>
+        <ChoiceBox fx:id="mosicStatus" layoutX="594.0" layoutY="36.0" prefWidth="155.00009999999747">
           <items>
             <FXCollections fx:factory="observableArrayList">
               <String fx:value="Item 1" />
@@ -65,12 +69,20 @@
             </FXCollections>
           </items>
         </ChoiceBox>
-        <Button fx:id="addButton" layoutX="927.0" layoutY="225.0" mnemonicParsing="false" onAction="#addToDatabase" text="Add" />
-        <Label layoutX="353.0" layoutY="41.0" text="DBID" />
-        <TextField id="numberField" layoutX="411.0" layoutY="38.0" prefWidth="98.50006103515625" />
-        <TextField id="pathField" fx:id="folderPath" layoutX="428.0" layoutY="265.0" onAction="#clickFolderPathField" onMouseClicked="#clickFolderPathField" prefWidth="410.0" />
-        <Label layoutX="356.0" layoutY="268.0" text="Folder Path" />
-        <Button fx:id="scanFolder" layoutX="855.0" layoutY="266.0" mnemonicParsing="false" onAction="#listFilesForFolder" text="Scan folder" />
+        <Button fx:id="addButton" layoutX="836.0" layoutY="70.0" mnemonicParsing="false" onAction="#addToDatabase"
+                text="Add"/>
+        <Label layoutX="365.0" layoutY="44.0" text="DBID"/>
+        <TextField id="numberField" fx:id="codeField" editable="false" layoutX="411.0" layoutY="38.0"
+                   prefWidth="98.50006103515625"/>
+        <TextField id="pathField" fx:id="folderPath" layoutX="415.0" layoutY="308.0" onAction="#clickFolderPathField"
+                   onMouseClicked="#clickFolderPathField" prefWidth="410.0"/>
+        <Label layoutX="337.0" layoutY="311.0" text="Folder Path"/>
+        <Button fx:id="scanFolder" layoutX="843.0" layoutY="306.0" mnemonicParsing="false"
+                onAction="#listFilesForFolder" prefWidth="103.50006103515625" text="Scan folder"/>
+        <Button fx:id="refershImagebutton" layoutX="107.0" layoutY="315.0" mnemonicParsing="false"
+                onAction="#refershImage" text="Refersh Image"/>
+        <Button fx:id="updateButton" layoutX="829.0" layoutY="111.0" mnemonicParsing="false" onAction="#updateInfo"
+                text="Update"/>
       </children>
     </Pane>
   </children>

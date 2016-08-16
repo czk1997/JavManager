@@ -16,32 +16,45 @@ public class Dbmsystem {
     public Dbmsystem(){
         initilizeTable();
     }
+
+    public static void main(String args[]) {
+        Dbmsystem d = new Dbmsystem();
+    }
+
     public  int updateString(int options, String content,int id){
         String sql="UPDATE Movies SET "+keywords[options]+" WHERE UID="+id;
-        ResultSet result=constumupdate(sql);
-
-        return 0;
+        int affectedRows = constumupdate(sql);
+        return affectedRows;
     }
+
     public  int insertNewMovie(String name,String Company, String filepath, String releasedate, int mosic,String actors, String numbers,String imagePath){
-        System.out.println("True");
+        String checkSame = "SELECT * FROM Movies WHERE Path=\"" + filepath + "\"";
+        ResultSet resultSet = constumQuery(checkSame);
+        try {
+            while (resultSet.next()) {
+                System.out.println("got it");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         String sql="INSERT INTO Movies(movieName,Numbers,Actors,Company,ReleaseDate,Path,mosic,imagePath) VALUES (\"" + name + "\", \""+numbers+"\", \""+actors+"\", \""+Company+"\", \""+releasedate+"\", \""+filepath+"\", "+mosic+", \""+imagePath+"\");";
         System.out.println(sql);
-        ResultSet result=constumupdate(sql);
-        return 0;
+        int affectedRows = constumupdate(sql);
+        return affectedRows;
 
     }
-    public  ResultSet constumupdate(String content){
+
+    public int constumupdate(String content) {
         Connection c=null;
         Statement stmt=null;
         ResultSet result=null;
+        int rowNumber = 0;
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection("jdbc:sqlite:userData.db");
             System.out.println("Got connection of Database");
             stmt=c.createStatement();
-            stmt.execute(content);
-            System.out.println("yes!!!!");
-            result=stmt.getResultSet();
+            rowNumber = stmt.executeUpdate(content);
             stmt.close();
             c.close();
 
@@ -51,7 +64,7 @@ public class Dbmsystem {
         }catch (SQLException e){
             e.printStackTrace();
         }
-        return result;
+        return rowNumber;
 
     }
 
@@ -66,11 +79,6 @@ public class Dbmsystem {
             stmt = c.createStatement();
             System.out.println(content);
             result = stmt.executeQuery(content);
-            System.out.println("yes!!!!");
-
-
-            System.out.println("Closed!");
-
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
 
@@ -80,6 +88,7 @@ public class Dbmsystem {
         return result;
 
     }
+
     public  int initilizeTable(){
         Connection c = null;
         Statement stmt = null;
@@ -120,11 +129,13 @@ public class Dbmsystem {
         System.out.println("Table created successfully");
         return 0;
     }
-    public  ResultSet getMovieInfo(int type, String content){
-        String sql="SELECT * FROM Movies WHERE "+keywords[type]+"="+content+";";
-        ResultSet resultSet=constumupdate(sql);
+
+    public ResultSet getMovieInfo(int dbid) {
+        String sql = "SELECT * FROM Movies WHERE UID=" + dbid;
+        ResultSet resultSet = constumQuery(sql);
         return resultSet;
     }
+
     public  ArrayList<ArrayList<String>> getReplaceInfo(){
         String sql="SELECT * FROM RepkeyWord";
         ResultSet resultSet = constumQuery(sql);
@@ -156,20 +167,5 @@ public class Dbmsystem {
             e.printStackTrace();
         }
         return resultSet;
-    }
-
-    public ResultSet getAllMovies() {
-        String sql = "SELECT * FROM Movies";
-        ResultSet resultSet = constumQuery(sql);
-        try {
-            System.out.println(resultSet.getRow());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return resultSet;
-    }
-
-    public static void main(String args[]) {
-        Dbmsystem d=new Dbmsystem();
     }
 }
