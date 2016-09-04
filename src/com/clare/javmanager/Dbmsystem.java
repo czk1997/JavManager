@@ -68,6 +68,10 @@ public class Dbmsystem {
             int affectedRows = constumupdate(sql);
             System.out.println("tRUE2");
             if (affectedRows != 0 & status == 0) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Completed");
+                alert.setContentText("Add Completed!");
+                alert.showAndWait();
 
             }
 
