@@ -33,6 +33,18 @@ import java.util.regex.Pattern;
 
 public class Controller implements Initializable {
     @FXML
+    public MenuBar menubar;
+    @FXML
+    public Menu FileMenu;
+    @FXML
+    public Menu Edit;
+    @FXML
+    public Menu Tools;
+    @FXML
+    public Menu Help;
+    @FXML
+    public MenuItem editrpkmenu;
+    @FXML
     public TextField numberField;
     @FXML
     public TextField compamyField;
@@ -81,10 +93,10 @@ public class Controller implements Initializable {
     public String Name, Company, ReleaseDate, Path, Number;
     public StringBuilder Actors;
     public String code, path;
-    public ArrayList<Avideo> avList = new ArrayList<>();
     public ObservableList<Avideo> dataOfTable = FXCollections.observableArrayList();
     public Thread thread = new Thread();
     public Progress progress;
+    public ReplaceKeyEdit rpk;
     @FXML
     GridPane AllContent;
     @FXML
@@ -100,10 +112,9 @@ public class Controller implements Initializable {
         rDateT.setCellValueFactory(new PropertyValueFactory<Avideo, String>("rdataString"));
         ActorT.setCellValueFactory(new PropertyValueFactory<Avideo, String>("actors"));
         dbidT.setCellValueFactory(new PropertyValueFactory<Avideo, Integer>("dbid"));
-
+        rpk = new ReplaceKeyEdit(1);
         infoTable.setItems(dataOfTable);
         updateTable();
-
 
 
     }
@@ -199,7 +210,7 @@ public class Controller implements Initializable {
         Number = new String();
         imagePath = new String();
         //初始化同时加载识别码
-        Pattern p = Pattern.compile("<p><span class=\"header\">識別碼:</span> <span style=\"color:#CC0000;\">\\d+-\\d+</span></p>");
+        Pattern p = Pattern.compile("<p><span class=\"header\">識別碼:</span> <span style=\"color:#CC0000;\">(.+?)</span></p>");
         String temp = new String();
         Matcher matcher = p.matcher(resultOfSpider);
         if (matcher.find()) {
@@ -278,13 +289,12 @@ public class Controller implements Initializable {
 
             String temp2 = "<div class=\"star-name\"><a href=\"(.+?)\" title=\"(.+?)\">";
             temp = temp.replaceAll(temp2, "").replaceAll("</a></div>", "").replaceAll("\\s", " ");
-
-
-            Actors.append(temp + " , ");
+            Actors.append(temp + ", ");
             temp = new String();
         }
-        actorField.setText(Actors.toString());
-        avideo.setActors(Actors);
+        String Actorss = Actors.toString().replaceAll(", $", "");
+        actorField.setText(Actorss);
+        avideo.setActors(new StringBuilder(Actorss));
         matcher.reset();
         if (resultOfSpider.contains("<li class=\"active\"><a href=\"https://www.javbus.com/\">有碼</a></li>")) {
             avideo.setMosicStatus(true);
@@ -296,19 +306,18 @@ public class Controller implements Initializable {
     }
 
     public void addToDatabase(Avideo avideo) {
-        boolean flag = (mosicStatus.getSelectionModel().isSelected(0) == true);
-        int a = dbms.insertNewMovie(avideo.getVideoName(), avideo.getCompany(), avideo.getFilepath(), avideo.getStringDate(), avideo.getIntStatus(), avideo.getActors(), code, imagePath);
-        updateTable();
-        infoTable.getSelectionModel().selectLast();
-        infoTable.scrollTo(infoTable.getItems().size() - 1);
+        int a = dbms.insertNewMovie(avideo.getVideoName(), avideo.getCompany(), avideo.getFilepath(), avideo.getStringDate(), avideo.getIntStatus(), avideo.getActors(), code, imagePath, 1);
+        System.out.println("a");
+
     }
 
     public void addToDatabase() {
         boolean flag = (mosicStatus.getSelectionModel().isSelected(0) == true);
-        int a = dbms.insertNewMovie(NameField.getText(), compamyField.getText(), pathField.getText(), rDateField.getText(), mosicStatus.getSelectionModel().getSelectedIndex(), actorField.getText(), numberField.getText(), imagePath);
+        int a = dbms.insertNewMovie(NameField.getText(), compamyField.getText(), pathField.getText(), rDateField.getText(), mosicStatus.getSelectionModel().getSelectedIndex(), actorField.getText(), numberField.getText(), imagePath, 0);
         updateTable();
         infoTable.getSelectionModel().selectLast();
         infoTable.scrollTo(infoTable.getItems().size() - 1);
+        onTableClicked();
     }
 
     public void listFilesForFolder() {
@@ -333,6 +342,7 @@ public class Controller implements Initializable {
                         path = folderPath.getText() + "\\" + listOfFiles[i].getName();
                         tempavdeio.setFilepath(path);
                         addToDatabase(tempavdeio);
+                        System.out.println("Add Complete");
                         updateTable();
                     }
                     int current = i;
@@ -369,7 +379,6 @@ public class Controller implements Initializable {
         progress.PRthread = thread;
 
         thread.start();
-
 
 
     }
@@ -430,10 +439,6 @@ public class Controller implements Initializable {
 
     }
 
-    public void stopCurrentThread() {
-        thread.stop();
-
-    }
 
     public void refershImage() {
         Task task = new Task() {
@@ -468,9 +473,24 @@ public class Controller implements Initializable {
         }
     }
 
+    public void EditReplaceKey() {
+        System.out.println("Get Yes");
 
+        System.out.println(dbms);
+        try {
+            rpk.setPaneAndDbms(AllContent, dbms);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        AllContent.setDisable(true);
+
+    }
 
 }
+
+
+
+
 
 
 

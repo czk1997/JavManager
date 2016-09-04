@@ -12,19 +12,25 @@
     <Pane fx:id="content" disable="false" prefHeight="811.0" prefWidth="1011.0" styleClass="background"
           GridPane.columnIndex="0" GridPane.rowIndex="0">
       <children>
-        <MenuBar layoutX="0.0" layoutY="1.0" prefHeight="26.0" prefWidth="1600.0">
+        <MenuBar fx:id="menubar" layoutX="0.0" layoutY="1.0" prefHeight="26.0" prefWidth="1600.0">
           <menus>
-            <Menu mnemonicParsing="false" text="File">
+            <Menu mnemonicParsing="false" text="File" fx:id="FileMenu">
               <items>
                 <MenuItem mnemonicParsing="false" text="Close" />
               </items>
             </Menu>
-            <Menu mnemonicParsing="false" text="Edit">
+            <Menu mnemonicParsing="false" text="Edit" fx:id="Edit">
               <items>
                 <MenuItem mnemonicParsing="false" text="Delete" />
               </items>
             </Menu>
-            <Menu mnemonicParsing="false" text="Help">
+            <Menu mnemonicParsing="false" text="Tools" fx:id="Tools">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#EditReplaceKey" text="Edit Replace Key Words"
+                          fx:id="editrpkmenu"/>
+              </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Help" fx:id="Help">
               <items>
                 <MenuItem mnemonicParsing="false" text="About" />
               </items>

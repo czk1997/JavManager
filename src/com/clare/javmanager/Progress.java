@@ -24,10 +24,6 @@ public class Progress {
     public Thread PRthread;
     public Pane pane;
 
-    {
-
-    }
-
     public Progress(Pane pane, Thread thread, Stage stage, String labelContent) {
         PRthread = thread;
         prstage = stage;

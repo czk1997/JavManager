@@ -3,6 +3,7 @@
     <properties maven-id="org.aerofx:aerofx:0.2" />
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/lib/aerofx-0.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/aerofx-0.2.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
